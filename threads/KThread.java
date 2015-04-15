@@ -43,7 +43,11 @@ public class KThread {
      * create an idle thread as well.
      */
     public KThread() {
-    joinQueue = ThreadedKernel.scheduler.newThreadQueue(false);
+    joinQueue = ThreadedKernel.scheduler.newThreadQueue(true);
+        boolean intStatus = Machine.interrupt().disable();
+        joinQueue.acquire(this);
+        Machine.interrupt().restore(intStatus);
+
 	if (currentThread != null) {
 	    tcb = new TCB();
 	}	    
@@ -527,7 +531,6 @@ public class KThread {
 	}
 	static private void testProblem4() {
 		communicator = new Communicator();
-		// for (int i = 0; i < 10; ++i) {
 		G = new KThread(new Runnable() {
 				public void run() {
 					runG();
@@ -538,12 +541,70 @@ public class KThread {
 					runH();
 				}
 			});
-		
-		H.fork();
 		G.fork();
-		// }
+		H.fork();
 	}
+    
+    static private KThread I, J,K,L;
+    static private void runI() {
+        System.out.println("I: I start.");
+        System.out.println("I: I need K.");
+        K.join();
+        System.out.println("I: I am done.");
+    }
+    static private void runJ() {
 
+        System.out.println("J: I start.");
+        System.out.println("J: I need K.");
+        K.join();
+        System.out.println("J: I am done.");
+    }
+    static private void runK() {
+        System.out.println("K: I start.");
+        System.out.println("K: I am done.");
+    }
+    static private void runL() {
+        System.out.println("L: I start.");
+        System.out.println("L: I need J.");
+        J.join();
+        System.out.println("L: I am done.");
+    }
+    
+    static private void testProblem5() {
+        I = new KThread(new Runnable() {
+            public void run() {
+                runI();
+            }
+        });
+        J = new KThread(new Runnable() {
+            public void run() {
+                runJ();
+            }
+        });
+        K = new KThread(new Runnable() {
+            public void run() {
+                runK();
+            }
+        });
+        L = new KThread(new Runnable() {
+            public void run() {
+                runL();
+            }
+        });
+
+        //ThreadedKernel.scheduler.setPriority(I,3);
+        boolean intStatus = Machine.interrupt().disable();
+        ((PriorityScheduler)ThreadedKernel.scheduler).setPriority(J,4);
+        ((PriorityScheduler)ThreadedKernel.scheduler).setPriority(I,5);
+        ((PriorityScheduler)ThreadedKernel.scheduler).setPriority(L,6);
+        Machine.interrupt().restore(intStatus);
+        I.fork();
+        J.fork();
+        L.fork();
+        K.fork();
+    }
+    
+    
 	static private void testProblem6() {
 		Boat game = new Boat();
 		game.selfTest();
@@ -557,9 +618,9 @@ public class KThread {
 		// testProblem1();
 		// testProblem2();
 		// testProblem3();
-		testProblem4();
-		// testProblem5();
-		// testProblem6();
+		// testProblem4();
+     //   testProblem5();
+        // testProblem6();
     }
 
     private static final char dbgThread = 't';

@@ -530,6 +530,7 @@ public class KThread {
 		System.out.println("H: I listened " + msg + ".");
 	}
 	static private void testProblem4() {
+		communicator = new Communicator();
 		G = new KThread(new Runnable() {
 				public void run() {
 					runG();

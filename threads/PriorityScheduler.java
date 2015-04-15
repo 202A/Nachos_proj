@@ -153,7 +153,7 @@ public class PriorityScheduler extends Scheduler {
 	}
 
 	public KThread nextThread() {//ook
-        
+         //       System.out.println("next:");
 	    Lib.assertTrue(Machine.interrupt().disabled());
         // implement me!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         if (this.lockHolder != null && this.transferPriority)
@@ -165,6 +165,9 @@ public class PriorityScheduler extends Scheduler {
             waitQueue.remove(optimal_Thread);
             getThreadState(optimal_Thread).acquire(this);
         }
+         //       System.out.println("HAHAHA");
+        
+     //   System.out.println( getThreadState(optimal_Thread).getEffectivePriority()+"HAHAHA");
         return optimal_Thread;
 	}
 
@@ -182,12 +185,15 @@ public class PriorityScheduler extends Scheduler {
         int res_priority=0;
         Iterator<KThread>  it=waitQueue.iterator();
         while (it.hasNext()){
+      //      System.out.println("aa:");
+
             KThread temp=it.next();
             int temp_priority = getThreadState(temp).getEffectivePriority();
             if (res==null || temp_priority>res_priority){
                 res=temp;
                 res_priority=temp_priority;
             }
+      //      System.out.println("temp_priority:"+temp_priority);
         }
         return res;
 	}
@@ -198,10 +204,13 @@ public class PriorityScheduler extends Scheduler {
 	}
         
     public int getEffectivePriority(){//ook
+    //    System.out.println("          WAAAAAA"+(transferPriority)+waitQueue.size());
         if (transferPriority == false)
             return priorityMinimum;
+   //     System.out.println("          In queue:"+Effective_priority);
         if ( priority_Wrong==true){
             Iterator<KThread> it=waitQueue.iterator();
+     //   System.out.println("          more in:");
             while (it.hasNext()){
                 KThread temp=it.next();
                 int temp_priority=getThreadState(temp).getEffectivePriority();
@@ -282,7 +291,9 @@ public class PriorityScheduler extends Scheduler {
 	 */
 	public int getEffectivePriority() {//ook
         // implement me!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+     //   System.out.println("    In"+priority);
         if (priority_Wrong==true){
+         //   System.out.println("    ReallIn?");
             Effective_priority=priority;
             Iterator it=Lockset.iterator();
             while (it.hasNext()){
@@ -290,6 +301,7 @@ public class PriorityScheduler extends Scheduler {
                 int temp_priority=temp.getEffectivePriority();
                 if (temp_priority>Effective_priority)
                     Effective_priority=temp_priority;
+         //       System.out.println("    nextStep?"+Effective_priority);
             }
             priority_Wrong=false;
         }
@@ -337,6 +349,7 @@ public class PriorityScheduler extends Scheduler {
         waitQueue.setWrong();
         if (Lockset.indexOf(waitQueue)>=0){
             Lockset.remove(waitQueue);
+            // System.out.println("  BIIIG error");
             waitQueue.lockHolder=null;
         }
     }

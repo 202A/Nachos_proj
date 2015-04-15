@@ -619,7 +619,7 @@ public class KThread {
 		// testProblem2();
 		// testProblem3();
 		// testProblem4();
-     //   testProblem5();
+        testProblem5();
         // testProblem6();
     }
 

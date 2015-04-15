@@ -526,7 +526,9 @@ public class KThread {
 		System.out.println("H: I listened " + msg + ".");
 	}
 	static private void testProblem4() {
-		G' = new KThread(new Runnable() {
+		communicator = new Communicator();
+		// for (int i = 0; i < 10; ++i) {
+		G = new KThread(new Runnable() {
 				public void run() {
 					runG();
 				}
@@ -536,8 +538,10 @@ public class KThread {
 					runH();
 				}
 			});
-		G.fork();
+		
 		H.fork();
+		G.fork();
+		// }
 	}
 
 	static private void testProblem6() {
@@ -553,7 +557,7 @@ public class KThread {
 		// testProblem1();
 		// testProblem2();
 		// testProblem3();
-		// testProblem4();
+		testProblem4();
 		// testProblem5();
 		// testProblem6();
     }

@@ -618,8 +618,8 @@ public class KThread {
 		// testProblem1();
 		// testProblem2();
 		// testProblem3();
-		// testProblem4();
-        testProblem5();
+		 testProblem4();
+//        testProblem5();
         // testProblem6();
     }
 

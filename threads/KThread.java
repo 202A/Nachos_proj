@@ -527,7 +527,7 @@ public class KThread {
 	}
 	static private void testProblem4() {
 		communicator = new Communicator();
-		// for (int i = 0; i < 10; ++i) {
+		for (int i = 0; i < 10; ++i) {
 		G = new KThread(new Runnable() {
 				public void run() {
 					runG();
@@ -541,7 +541,7 @@ public class KThread {
 		
 		H.fork();
 		G.fork();
-		// }
+		}
 	}
 
 	static private void testProblem6() {

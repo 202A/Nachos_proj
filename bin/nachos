@@ -1,0 +1,10 @@
+#!/bin/sh
+
+onexit() {
+	stty $OLDSTTYSTATE
+}
+
+OLDSTTYSTATE=`stty -g` 
+trap onexit 0 
+stty -icanon min 1 -echo 
+java nachos.machine.Machine $*
